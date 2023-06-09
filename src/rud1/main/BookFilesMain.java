@@ -4,6 +4,7 @@
  */
 package rud1.main;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class BookFilesMain {
 		List<Book> books = fileToList(BOOKS_INPUT_FILE);
 		mostrarBooks(books);
 		listToFile(books);
-		Book book = read(3);
+		Book book = readBookInPosition(4);
 		if (book != null) {
 			System.out.println(book);
 		}
@@ -133,7 +134,7 @@ public class BookFilesMain {
 
 	}
 
-	private static Book read(int pos) {
+	private static Book readBookInPosition(int pos) {
 		// tamaño registro 30*2*2+4 = 124
 		// id 4 bytes
 		// autor = STRING_LENGTH*2 BYTES
@@ -163,7 +164,13 @@ public class BookFilesMain {
 			book = new Book(author, title);
 			book.setId(id);
 
-		} catch (FileNotFoundException e) {
+		} catch (EOFException eof) {
+			// TODO Auto-generated catch block
+			eof.printStackTrace();
+			System.out.println("Se ha alcanzado el final del fichero");
+		}
+
+		catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
